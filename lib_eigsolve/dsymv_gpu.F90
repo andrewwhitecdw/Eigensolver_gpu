@@ -98,7 +98,7 @@ module dsymv_gpu
       ! CASE 2: Upper triangular block
       else if (ii < jj) then
         do k = 0,NTILES-1
-          if (j + k * blockDim%y <= N) then
+          if (i <= N .and. j + k * blockDim%y <= N) then
             Ar = A(i, j + k * blockDim%y)
           endif
 
