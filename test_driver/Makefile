@@ -41,4 +41,4 @@ test_dsygvdx: test_dsygvdx.F90
 	pgf90 -o test_dsygvdx test_dsygvdx.F90 toolbox.o wallclock.o ${LIBS} ${FLAGS} ${OPTFLAGS} -pgf90libs ${INCS}
 
 clean:
-	rm test_zhegvdx test_dsygvdx *.mod *.o
+	rm -f test_zhegvdx test_dsygvdx *.mod *.o
