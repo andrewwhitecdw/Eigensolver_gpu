@@ -112,6 +112,7 @@ program main
     call get_command_argument(1, arg)
     read(arg, *)  N
     lda = N
+    M = N
 
     ! Create random positive-definite hermetian matrices on host
     call create_random_symmetric_pd(Aref, N)
@@ -167,7 +168,7 @@ program main
   ! Initialize solvers
   call init_eigsolve_gpu()
 
-  istat = cublasInit
+  istat = cublasInit()
   if (istat /= CUBLAS_STATUS_SUCCESS) write(*,*) 'cublas intialization failed'
 
   istat = cusolverDnCreate(h)
@@ -216,6 +217,8 @@ program main
   print*, "MAGMA_____________________"
   call magmaf_dsygvd(1, 'V', 'U', N, A2, lda, B2, lda, w2, work, -1, iwork, -1, istat)
   if (istat /= 0) write(*,*) 'magmaf_dsygvd buffer sizes failed',istat
+  lwork = work(1)
+  liwork = iwork(1)
   deallocate(work, iwork)
   allocate(work(lwork), iwork(liwork))
 
@@ -281,11 +284,12 @@ program main
   print*, "Time for cusolverDnDsygvd = ", (te - ts)*1000.0
 #endif
   print*
-  istat = devInfo_d
 #ifdef HAVE_CUSOLVERDNDSYGVDX
   if (istat /= CUSOLVER_STATUS_SUCCESS) write(*,*) 'cusolverDnDsygvdx failed'
+  if (devInfo_d /= 0) write(*,*) 'cusolverDnDsygvdx info failed'
 #else
   if (istat /= CUSOLVER_STATUS_SUCCESS) write(*,*) 'cusolverDnDsygvd failed'
+  if (devInfo_d /= 0) write(*,*) 'cusolverDnDsygvd info failed'
 #endif
 
 
