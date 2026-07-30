@@ -106,15 +106,15 @@ program main
   i = command_argument_count()
 
   if (i >= 1) then
-    ! If N is provided, generate random hermetian matrices for A and B
+    ! If N is provided, generate random hermitian matrices for A and B
     print*, "Using randomly-generated matrices..."
     call get_command_argument(1, arg)
     read(arg, *)  N
     lda = N
 
-    ! Create random positive-definite hermetian matrices on host
-    call create_random_hermetian_pd(Aref, N)
-    call create_random_hermetian_pd(Bref, N)
+    ! Create random positive-definite hermitian matrices on host
+    call create_random_hermitian_pd(Aref, N)
+    call create_random_hermitian_pd(Bref, N)
 
   else
     print*, "Usage:\n\t ./main [N]"
