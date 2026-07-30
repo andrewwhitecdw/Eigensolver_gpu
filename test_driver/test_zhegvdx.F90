@@ -30,7 +30,6 @@ module funcs
     use cublas
     complex(8), allocatable, dimension(:,:)         :: A, temp
     complex(8), allocatable, dimension(:,:), device :: A_d, temp_d
-    complex(8)                                      :: val
     real(8)                                         :: rv, iv
     integer                                         :: i, j, N
 
