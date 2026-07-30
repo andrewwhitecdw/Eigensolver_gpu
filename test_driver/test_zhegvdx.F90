@@ -24,8 +24,8 @@
 module funcs
   contains
 
-  ! Creates pseudo-random positive-definite hermetian matrix
-  subroutine create_random_hermetian_pd(A, N)
+  ! Creates pseudo-random positive-definite hermitian matrix
+  subroutine create_random_hermitian_pd(A, N)
     use cudafor
     use cublas
     complex(8), allocatable, dimension(:,:)         :: A, temp
@@ -37,7 +37,7 @@ module funcs
     allocate(A(N,N))
     allocate(temp(N,N))
 
-    ! Create general hermetian temp
+    ! Create general hermitian temp
     do j = 1, N
       do i = 1, N
         if (i > j) then
@@ -55,7 +55,7 @@ module funcs
     allocate(A_d, source = A)
     allocate(temp_d, source = temp)
 
-    ! Multiply temp by conjugate transpose of temp to get positive definite hermetian A
+    ! Multiply temp by conjugate transpose of temp to get positive definite hermitian A
     call cublaszgemm('N', 'C', N, N, N, cmplx(1.0, 0.0, 8), temp_d, N, temp_d, N, cmplx(0.0, 0.0, 8), A_d, N)
 
     A = A_d
