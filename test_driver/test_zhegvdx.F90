@@ -113,7 +113,7 @@ program main
     lda = N
 
     ! Create random positive-definite hermetian matrices on host
-    call create_random_hermetian_pd(Aref, N)
+    call create_random_hermitian_pd(Aref, N)
     call create_random_hermetian_pd(Bref, N)
 
   else
