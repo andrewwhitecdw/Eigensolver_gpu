@@ -140,7 +140,7 @@ program main
   ! Initialize solvers
   call init_eigsolve_gpu()
 
-  istat = cublasInit
+  istat = cublasInit()
   if (istat /= CUBLAS_STATUS_SUCCESS) write(*,*) 'cublas intialization failed'
 
   istat = cusolverDnCreate(h)
@@ -190,6 +190,9 @@ program main
   print*, "MAGMA_____________________"
   call magmaf_zhegvd(1, 'V', 'U', N, A2, lda, B2, lda, w2, work, -1, rwork, -1, iwork, -1, istat)
   if (istat /= 0) write(*,*) 'magmaf_zhegvd buffer sizes failed',istat
+  lwork = work(1)
+  lrwork = rwork(1)
+  liwork = iwork(1)
   deallocate(work, rwork, iwork)
   allocate(work(lwork), rwork(lrwork), iwork(liwork))
 
@@ -255,11 +258,14 @@ program main
   print*, "Time for cusolverDnZhegvd = ", (te - ts)*1000.0
 #endif
   print*
-  istat = devInfo_d
 #ifdef HAVE_CUSOLVERDNZHEGVDX
   if (istat /= CUSOLVER_STATUS_SUCCESS) write(*,*) 'cusolverDnZhegvdx failed'
+  istat = devInfo_d
+  if (istat /= 0) write(*,*) 'cusolverDnZhegvdx info failed'
 #else
   if (istat /= CUSOLVER_STATUS_SUCCESS) write(*,*) 'cusolverDnZhegvd failed'
+  istat = devInfo_d
+  if (istat /= 0) write(*,*) 'cusolverDnZhegvd info failed'
 #endif
 
 
