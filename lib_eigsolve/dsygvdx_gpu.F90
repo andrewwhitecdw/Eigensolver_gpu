@@ -106,7 +106,7 @@ module dsygvdx_gpu
         print*, "dsygvdx_gpu error: lwork_h must be at least 1 + 6*N + 2*N*N"
         info = -1
         return
-      else if (liwork_h < N) then 
+      else if (liwork_h < 3 + 5*N) then 
         print*, "dsygvdx_gpu error: liwork_h must be at least 3 + 5*N"
         info = -1
         return
@@ -156,7 +156,7 @@ module dsygvdx_gpu
       call nvtxEndRange
 
       ! Copy final eigenvectors to host
-      if (not(skip_host_copy)) then
+      if (.not. skip_host_copy) then
         istat = cudaMemcpy2D(Z_h, ldz_h, Z, ldz, N, m)
         if (istat .ne. 0) then
           print*, "dsygvdx_gpu error: cudaMemcpy2D failed!"
