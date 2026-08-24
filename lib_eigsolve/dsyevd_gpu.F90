@@ -44,7 +44,7 @@ module dsyevd_gpu
       integer, dimension(1:liwork_h)              :: iwork_h
 
       real(8), dimension(1:lda, 1:N), device      :: A
-      real(8), dimension(1:lda, 1:N), device      :: Z
+      real(8), dimension(1:ldz, 1:N), device      :: Z
       real(8), dimension(1:ldz_h, 1:N), pinned    :: Z_h
       real(8), dimension(1:N), device             :: w
       real(8), dimension(1:N), pinned             :: w_h
@@ -105,8 +105,8 @@ module dsyevd_gpu
       call nvtxEndRange
 
       ! Copy eigenvectors and eigenvalues to GPU
-      istat = cudaMemcpy2D(Z(1, 1), ldz, Z_h, ldz_h, N, NZ)
-      w(1:N) = w_h(1:N)
+      istat = cudaMemcpy2D(Z(1, 1), ldz, Z_h(1, il), ldz_h, N, NZ)
+      w(1:NZ) = w_h(il:iu)
 
       !! Call DORMTR to rotate eigenvectors to obtain result for original A matrix
       !! JR Note: Eventual function calls from DORMTR called directly here with associated indexing changes
